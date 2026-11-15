@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 同路人 — Instagram 授權</title>
+<style>
+body{background:#0b0518;color:#f0ecf8;font-family:-apple-system,"Noto Sans TC",sans-serif;margin:0;padding:40px}
+.card{max-width:760px;margin:8vh auto;background:#151026;border:1px solid #3a2a5c;border-radius:18px;padding:34px}
+h1{font-size:26px;margin:0 0 8px;color:#c9e13f}
+p{line-height:1.7;color:#c9c0dd}
+textarea{width:100%;height:130px;background:#0a0614;color:#c9e13f;border:1px solid #4a3a70;border-radius:12px;padding:14px;font-family:ui-monospace,Menlo,monospace;font-size:14px}
+button{margin-top:14px;background:#c9e13f;color:#100820;border:0;border-radius:10px;padding:14px 22px;font-size:16px;font-weight:700;cursor:pointer}
+.ok{color:#8fe3a0}.err{color:#ff7070}
+code{color:#c9e13f}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Instagram 授權完成</h1>
+  <p id="msg">正在讀取授權碼…</p>
+  <textarea id="code" readonly placeholder="授權碼會出現在這裡"></textarea>
+  <button onclick="copyCode()">複製授權碼</button>
+  <p style="font-size:13px;margin-top:22px">授權碼 1 小時內有效、只能用一次。複製後交俾 DSH（唔好公開貼出）。</p>
+</div>
+<script>
+const q = new URLSearchParams(location.search);
+let code = q.get('code') || '';
+code = code.replace(/#_$/, '');
+const err = q.get('error_description') || q.get('error');
+const msg = document.getElementById('msg');
+if (code) {
+  document.getElementById('code').value = code;
+  msg.className = 'ok';
+  msg.textContent = '已收到授權碼。撳「複製授權碼」，交俾 DSH。';
+} else if (err) {
+  msg.className = 'err';
+  msg.textContent = '授權失敗：' + decodeURIComponent(err.replace(/\+/g,' '));
+} else {
+  msg.textContent = '未見到 code 參數。請由 Instagram 授權頁重新導向返嚟。';
+}
+function copyCode(){
+  const t = document.getElementById('code');
+  t.select(); document.execCommand('copy');
+  msg.className='ok'; msg.textContent='已複製。返去 DSH 貼上（或存入檔案）。';
+}
+</script>
+</body>
+</html>
